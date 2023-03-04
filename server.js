@@ -25,8 +25,10 @@ fastify.register(require('@fastify/cors'), (instance) => {
 fastify.register(require("./db-connector"));
 fastify.register(require("./routes"));
 
+const port = process.env.PORT || 8080;
+
 // Run the server
-fastify.listen((error, address) => {
+fastify.listen({ port: port }, (error, address) => {
   if (error) {
     fastify.log.error(error);
     process.exit(1);
