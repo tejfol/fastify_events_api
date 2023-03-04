@@ -27,7 +27,7 @@ fastify.register(require("./routes"));
 
 
 // Run the server
-fastify.listen({ port: 8080, host: "127.0.0.1" }, (error, address) => {
+fastify.listen({ port: 8080 }, (error, address) => {
   if (error) {
     fastify.log.error(error);
     process.exit(1);

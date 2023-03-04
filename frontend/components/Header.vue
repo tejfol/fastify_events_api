@@ -4,7 +4,8 @@
       <div class="flex lg:flex-1">
         <a href="/" class="-m-1.5 p-1.5">
           <span class="sr-only">My Company</span>
-          <img class="animate-bounce shadow-xl h-8 w-auto rounded-full object-cover hover:h-80 hover:rounded-sm "
+          <img
+            class="animate-bounce hover:animate-none shadow-xl h-8 w-auto rounded-full object-cover hover:h-80 hover:rounded-sm "
             data-imgSrc="/images/new-home-oniichan.webp" src="/images/new-home-oniichan.webp" alt="" />
         </a>
       </div>

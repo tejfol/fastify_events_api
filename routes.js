@@ -10,25 +10,35 @@ async function routes(fastify, options) {
    */
   fastify.get("/:user", async (req, res) => {
     const { user: id } = req.params;
-    // @ts-ignore
-    const result = await users.findOne({ _id: ObjectId(id) });
+
+    const result = await users.findOne({ _id: new ObjectId(id) });
 
     if (!result) throw new Error("User is not found or registered here.");
 
     return result;
   });
 
+  // [POST] Create an event for the user.
+  fastify.post('/:user', async (req, res) => {
+    const { user: id } = req.params;
+    const { title, description, startDate, endDate } = req.body;
+
+    const result = await users.updateOne({ _id: new ObjectId(id) }, { $push: { events: { "title": title, "description": description, "startDate": startDate, "endDate": endDate, 'createdAt': new Date() } } });
+
+    if (!result) throw new Error("User is not found or registered here.");
+
+    return result;
+  })
+
   /** [DELETE] Deletes a user with spec id */
   fastify.delete('/:user', async (req, res) => {
     const { user: id } = req.params;
 
-    // @ts-ignore
-    const user = await users.findOne({ _id: ObjectId(id) });
+    const user = await users.findOne({ _id: new ObjectId(id) });
 
     if (!user) throw new Error('No user with this ID.');
 
-    // @ts-ignore
-    const result = await users.deleteOne({ _id: ObjectId(id) });
+    const result = await users.deleteOne({ _id: new ObjectId(id) });
 
     return result;
   })

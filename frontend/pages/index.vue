@@ -44,8 +44,6 @@ const onSubmit = async (values) => {
     console.log('Error');
   }
 }
-
-
 </script>
 
 <template>
@@ -83,6 +81,9 @@ const onSubmit = async (values) => {
                 <th scope="col" class="py-3.5 px-3 text-left text-sm font-semibold text-gray-900">
                   Phone Number
                 </th>
+                <th scope="col" class="py-3.5 px-3 text-left text-sm font-semibold text-gray-900">
+                  Events
+                </th>
                 <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-0">
                   <span class="sr-only">Edit</span>
                 </th>
@@ -101,6 +102,9 @@ const onSubmit = async (values) => {
                 </td>
                 <td class="whitespace-nowrap py-4 px-3 text-sm text-gray-500">
                   {{ user.phoneNumber }}
+                </td>
+                <td class="whitespace-nowrap py-4 px-3 text-sm text-gray-500">
+                  {{ user.events.length }}
                 </td>
                 <td
                   class="transition-all duration-300 relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium gap-4 flex w-full">
@@ -137,7 +141,7 @@ const onSubmit = async (values) => {
               <Field
                 class="block w-full rounded-md border-0 mt-2 py-1.5 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 placeholder="Suarez" name="lastName" type="text" label="Last Name" />
-              <ErrorMessage name="firstName" />
+              <ErrorMessage name="lastName" />
             </label>
 
             <label class="block mt-4" for="email">

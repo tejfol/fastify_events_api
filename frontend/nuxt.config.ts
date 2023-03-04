@@ -10,6 +10,12 @@ export default defineNuxtConfig({
     },
   },
 
+  routeRules: {
+    // Static page generated on-demand once
+    "*": { static: true },
+    "/_nuxt/**": { headers: { "cache-control": "max-age=31536000" } },
+  },
+
   app: {
     head: {
       title: "Storms named after people",
