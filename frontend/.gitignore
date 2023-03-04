@@ -7,3 +7,12 @@ node_modules
 .env
 dist
 .DS_Store
+
+frontend/*.log*
+frontend/.nuxt
+frontend/.nitro
+frontend/.cache
+frontend/.output
+frontend/.env
+frontend/dist
+frontend/.DS_Store

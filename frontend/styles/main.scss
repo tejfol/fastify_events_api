@@ -1,3 +1,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.field-required {
+  &::after {
+    @apply ml-1 text-red-600 content-['*'];
+  }
+}
+
+span[role="alert"] {
+  @apply block text-left text-xs mt-1 text-red-600;
+}

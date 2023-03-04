@@ -1,21 +1,6 @@
 const { ObjectId } = require("@fastify/mongodb");
 
 async function routes(fastify, options) {
-  const userBodySchema = {
-    type: "object",
-    required: ["users"],
-    properties: {
-      firstName: { type: "string" },
-      lastName: { type: "string" },
-      email: { type: "string" },
-      phoneNumber: { type: "string" }
-    },
-  };
-
-  const userRegistrationSchema = {
-    body: userBodySchema,
-  };
-
   // Connect to collection to manipulate data
   const users = fastify.mongo.db.collection("users");
 
@@ -33,7 +18,7 @@ async function routes(fastify, options) {
     return result;
   });
 
-  /** [DELETE] */
+  /** [DELETE] Deletes a user with spec id */
   fastify.delete('/:user', async (req, res) => {
     const { user: id } = req.params;
 
@@ -56,7 +41,7 @@ async function routes(fastify, options) {
    * @param {String} email
    * @param {String} phoneNumber 
    */
-  fastify.post("/users", { userRegistrationSchema }, async (req, res) => {
+  fastify.post("/users", async (req, res) => {
     const { firstName, lastName, email, phoneNumber } = req.body;
 
     if (await users.findOne({ email: email })) throw new Error('User with this email already registered.');
@@ -65,7 +50,8 @@ async function routes(fastify, options) {
       firstName,
       lastName,
       email,
-      phoneNumber
+      phoneNumber,
+      events: []
     });
 
     return result;

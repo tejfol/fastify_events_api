@@ -1,3 +1,53 @@
+
+<script setup>
+import { DialogTitle } from '@headlessui/vue';
+import { Form, Field, ErrorMessage } from 'vee-validate';
+import * as yup from 'yup';
+
+const open = ref(false)
+
+const config = useRuntimeConfig();
+
+const { refresh, data: users } = await useFetch(`${config.API_BASE_URL}`);
+
+const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
+
+const registrationSchema = yup.object({
+  firstName: yup.string().label('Fist Name').required(),
+  lastName: yup.string().label('Last Name').min(3).max(64).required(),
+  email: yup.string().label('Email').min(3).max(64).required().email(),
+  phoneNumber: yup.string().label('Phone Number').matches(phoneRegExp, 'Phone Number is not valid')
+});
+
+const deleteUser = async (id, e) => {
+  e.target.closest('tr').classList.add('bg-red-600/30');
+
+  setTimeout(async () => {
+    await useFetch(`${config.API_BASE_URL}/${id}`, {
+      method: "DELETE"
+    })
+    refresh();
+  }, 500);
+}
+
+const onSubmit = async (values) => {
+  try {
+    await useFetch(`${config.API_BASE_URL}/users`, {
+      method: 'POST',
+      body: { ...values }
+    })
+
+    // After validating the data we call the closeModal function;
+    open.value = false
+    refresh();
+  } catch (error) {
+    console.log('Error');
+  }
+}
+
+
+</script>
+
 <template>
   <div class="p-4 sm:p-6 lg:p-8">
     <div class="sm:flex sm:items-center">
@@ -43,7 +93,7 @@
                 <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
                   {{ user.firstName }}
                 </td>
-                <td class="whitespace-nowrap py-4 px-3 text-sm text-gray-500">
+                <td class="whitespace-nowrap py-4 px-3 text-sm text-gray-900">
                   {{ user.lastName }}
                 </td>
                 <td class="whitespace-nowrap py-4 px-3 text-sm text-gray-500">
@@ -69,51 +119,54 @@
       </div>
     </div>
     <RegistrationModal :open="open" @closeModal="open = !open">
-      <div>
+      <Form @submit="onSubmit" :validationSchema="registrationSchema">
         <div class="mt-3 text-center sm:mt-5">
           <DialogTitle as="h3" class="text-base font-semibold leading-6 text-gray-900">Register a new user.
           </DialogTitle>
           <div class="mt-2">
-            Here should go the validation
+            <label class="block mt-2" for="firstName">
+              <span class="text-left block field-required">First Name</span>
+              <Field
+                class="block w-full rounded-md border-0 mt-2 py-1.5 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                placeholder="Rodrigo" name="firstName" type="text" label="First Name" />
+              <ErrorMessage name="firstName" />
+            </label>
+
+            <label class="block mt-4" for="lastName">
+              <span class="text-left block field-required">Last Name</span>
+              <Field
+                class="block w-full rounded-md border-0 mt-2 py-1.5 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                placeholder="Suarez" name="lastName" type="text" label="Last Name" />
+              <ErrorMessage name="firstName" />
+            </label>
+
+            <label class="block mt-4" for="email">
+              <span class="text-left block field-required">Email</span>
+              <Field
+                class="block w-full rounded-md border-0 mt-2 py-1.5 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                placeholder="you@email.com" name="email" type="email" label="Email" />
+              <ErrorMessage name="email" />
+            </label>
+
+            <label class="block mt-4" for="phoneNumber">
+              <span class="text-left block field-required">Phone Number</span>
+              <Field
+                class="block w-full rounded-md border-0 mt-2 py-1.5 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                placeholder="646-776-8214" name="phoneNumber" type="tel" label="Phone Number" />
+              <ErrorMessage name="phoneNumber" />
+            </label>
+
           </div>
         </div>
-      </div>
-      <div class="mt-5 sm:mt-6 sm:grid sm:grid-flow-row-dense sm:grid-cols-2 sm:gap-3">
-        <button type="button"
-          class="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 sm:col-start-2"
-          @click="registerUser">Sign up</button>
-        <button type="button"
-          class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:col-start-1 sm:mt-0"
-          @click="open = false" ref="cancelButtonRef">Cancel</button>
-      </div>
+        <div class="mt-5 sm:mt-6 sm:grid sm:grid-flow-row-dense sm:grid-cols-2 sm:gap-3">
+          <button type="submit"
+            class="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 sm:col-start-2">Sign
+            up</button>
+          <button type="button"
+            class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:col-start-1 sm:mt-0"
+            @click="open = false" ref="cancelButtonRef">Cancel</button>
+        </div>
+      </Form>
     </RegistrationModal>
   </div>
 </template>
-
-<script setup>
-import { DialogTitle } from '@headlessui/vue'
-
-const open = ref(false)
-
-const config = useRuntimeConfig();
-
-const { refresh, data: users } = await useFetch(`${config.API_BASE_URL}`);
-
-const deleteUser = async (id, e) => {
-  e.target.closest('tr').classList.add('bg-red-600/30');
-
-  setTimeout(async () => {
-    await useFetch(`${config.API_BASE_URL}/${id}`, {
-      method: "DELETE"
-    })
-    refresh();
-  }, 500);
-}
-
-const registerUser = () => {
-  console.log('register');
-  // After validating the data we call the closeModal function;
-  open.value = false
-}
-
-</script>
