@@ -5,13 +5,15 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon server.js",
-    "debug": "nodemon --inspect server.js"
+    "start": "node ./backend/server.js",
+    "dev": "nodemon ./backend/server.js",
+    "debug": "nodemon --inspect ./backend/server.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@fastify/cors": "^8.2.0",
     "@fastify/mongodb": "^6.2.0",
     "@fastify/multipart": "^7.4.1",
     "@types/node": "^18.14.5",

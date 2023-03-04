@@ -33,6 +33,21 @@ async function routes(fastify, options) {
     return result;
   });
 
+  /** [DELETE] */
+  fastify.delete('/:user', async (req, res) => {
+    const { user: id } = req.params;
+
+    // @ts-ignore
+    const user = await users.findOne({ _id: ObjectId(id) });
+
+    if (!user) throw new Error('No user with this ID.');
+
+    // @ts-ignore
+    const result = await users.deleteOne({ _id: ObjectId(id) });
+
+    return result;
+  })
+
   /**
    * [POST] Register a new user
    * 
@@ -55,6 +70,8 @@ async function routes(fastify, options) {
 
     return result;
   });
+
+
 
   /**
    * [GET] Home page list with 10 registered users.
