@@ -25,14 +25,16 @@ fastify.register(require('@fastify/cors'), (instance) => {
 fastify.register(require("./db-connector"));
 fastify.register(require("./routes"));
 
-const port = process.env.PORT || 8080;
+// const port = process.env.PORT || 8080;
 
 // Run the server
-fastify.listen({ port: port }, (error, address) => {
-  if (error) {
-    fastify.log.error(error);
-    process.exit(1);
-  }
+// fastify.listen({ port: port }, (error, address) => {
+//   if (error) {
+//     fastify.log.error(error);
+//     process.exit(1);
+//   }
 
-  console.log(chalk.red(`Running on `) + chalk.bgWhite(address))
-});
+//   console.log(chalk.red(`Running on `) + chalk.bgWhite(address))
+// });
+
+module.exports = fastify;
